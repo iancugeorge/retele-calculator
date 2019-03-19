@@ -8,13 +8,16 @@ services:
         tty: true
         networks:
             - dmz
+            - net
+        sysctls:
+            - net.ipv4.icmp_echo_ignore_all=1
     rt2:
         image: 233:latest
         volumes:
             - .:/elocal
         tty: true
         networks:
-            - dmz
+            - net
     rt3:
         image: 233:latest
         volumes:
@@ -24,4 +27,15 @@ services:
             - dmz
 
 networks:
-    dmz: {}
+    dmz:
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.111.111.0/16 
+                  gateway: 172.111.111.1
+    net:
+        ipam:
+            driver: default
+            config:
+                - subnet: 198.13.13.0/16
+                  gateway: 198.13.13.1
